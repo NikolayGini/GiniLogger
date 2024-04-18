@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("maven-publish")
+    id("com.gini_logger.custom.plugin")
 }
 
 android {
@@ -41,23 +41,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                // Utilizing components.release requires configuring software components
-                from(components["release"])
-
-                groupId = "com.gini_logger"
-                artifactId = "core"
-                version = "1.0.0"
-            }
-
-            repositories {
-                mavenLocal()
-            }
-        }
-    }
 }
