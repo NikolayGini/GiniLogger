@@ -1,16 +1,12 @@
 package com.example.giniloggerapp
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.gini_logger.logD
 import com.example.gini_logger.logE
 import com.example.gini_logger.logI
@@ -19,25 +15,18 @@ import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
 
+    private val data = listOf(
+        "first",
+        "second",
+        "third",
+        "forth",
+        "fifth",
+        "sixth",
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.plant(Timber.DebugTree())
-
-        logI(message = 1314324)
-
-        Intent().apply {
-
-            logE(message = "gini logger")
-
-            logI {
-                message("logging via builder")
-                message("first")
-                message("second")
-                message("third")
-            }
-
-            logD { message("debug level log") }
-        }
 
         setContent {
             GiniLoggerAppTheme {
@@ -46,26 +35,22 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    MainScreen(
+                        data = data,
+                        onDebugClick = { logD(message = it) },
+                        onInfoClick = { logI(message = it)},
+                        onErrorClick = { logE(message = it) },
+                        onMultipleLogClick = { invokeMultipleLog() },
+                    )
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-    logE(message = "from greeting")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GiniLoggerAppTheme {
-        Greeting("Android")
+    private fun invokeMultipleLog() {
+        logD {
+            title("Multiple log")
+            data.forEach { message(value = it) }
+        }
     }
 }

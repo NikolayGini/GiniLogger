@@ -2,13 +2,16 @@ package com.example.gini_logger
 
 class Builder {
 
-    private val stringBuilder = StringBuilder()
+    private val titleBuilder = StringBuilder()
+    private val contentBuilder = StringBuilder()
 
-    fun message(value: Any) {
-        val prefix = if (stringBuilder.isEmpty()) "---> " else "\n\t-> "
-
-        stringBuilder.append("$prefix $value")
+    fun title(value: Any) {
+        titleBuilder.append(value)
     }
 
-    fun build(): String = stringBuilder.toString()
+    fun message(value: Any) {
+        contentBuilder.append("\n\t-> $value")
+    }
+
+    fun build(): String = titleBuilder.toString() + contentBuilder.toString()
 }

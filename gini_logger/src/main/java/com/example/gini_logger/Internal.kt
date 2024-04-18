@@ -23,10 +23,11 @@ internal fun log(level: Level, block: Builder.() -> Unit) {
         build()
     }
 
-    log(level = level, message = builtMessage, pointer = "")
+    log(level = level, message = builtMessage)
 }
 
-internal fun getClassName(): String = Throwable().stackTrace[4]
+internal fun getClassName(): String = Throwable().stackTrace[5]
     ?.className
+    ?.replace("\\$\\d".toRegex(), "")
     ?.substringAfterLast('.')
     ?: "UnknownClass"
