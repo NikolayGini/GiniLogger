@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.gini_logger.FileLogger
 import com.example.gini_logger.logD
 import com.example.gini_logger.logE
 import com.example.gini_logger.logI
@@ -26,7 +27,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Timber.plant(Timber.DebugTree())
+        FileLogger.enableToWriteLogsToFile(filePath = filesDir.path, fileName = "logger")
 
         setContent {
             GiniLoggerAppTheme {

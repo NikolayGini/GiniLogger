@@ -9,6 +9,7 @@ internal fun log(level: Level, message: Any, pointer: String = "---> ") {
     val messageWithPointer = "$pointer$message"
 
     Log.println(getPriority(level = level), tag, messageWithPointer)
+    FileLogger.logToFile(message = messageWithPointer, level = level)
 }
 
 internal fun getPriority(level: Level): Int = when (level) {
