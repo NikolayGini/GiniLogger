@@ -69,6 +69,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.jakewharton.timber)
 
-    implementation(libs.gini.logger.core)
-//    implementation(project(":gini_logger"))
+//    implementation(libs.gini.logger.core)
+    implementation(project(":gini_logger"))
 }

@@ -3,7 +3,6 @@ package com.example.gini_logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -15,51 +14,48 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-object FileLogger {
+internal class FileLogger private constructor(filePath: String, fileName: String) : Logger {
 
-    private const val FILE_NAME_DATE_PATTERN = "dd.MM.yyyy_HH:mm:ss"
-    private const val LOG_DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS"
+    companion object {
 
-    private var writingToFileEnabled = false
-    private var logsFile: File? = null
-    private var scope: CoroutineScope? = null
-    private var mutex: Mutex? = null
+        private const val FILE_NAME_DATE_PATTERN = "dd.MM.yyyy_HH:mm:ss"
+        private const val LOG_DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS"
+        internal const val DEFAULT_FILE_NAME = "gini_logger"
 
-    fun enableToWriteLogsToFile(filePath: String, fileName: String) {
-        writingToFileEnabled = true
-        scope = createCoroutineScope()
-        mutex = Mutex()
+        private var instance: FileLogger? = null
+        private val LOCK = Any()
 
-        val fullFilePath = buildFileName(filePath = filePath, fileName = fileName)
-
-        logsFile = File(fullFilePath)
+        internal fun getInstance(filePath: String, fileName: String): FileLogger = synchronized(LOCK) {
+            instance ?: FileLogger(filePath = filePath, fileName = fileName)
+                .also { instance = it }
+        }
     }
 
-    fun disableToWriteLogsTofile() {
-        writingToFileEnabled = false
-        scope?.cancel()
-        logsFile = null
-        scope = null
-        mutex = null
+    private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val mutex: Mutex = Mutex()
+    private val file = File(buildFileName(filePath = filePath, fileName = fileName))
+
+    override fun log(
+        level: Level,
+        tag: String,
+        message: String,
+    ) {
+        logToFile(level = level, tag = tag, message = message)
     }
 
-    internal fun logToFile(message: String, level: Level) {
-        if (!writingToFileEnabled) return
-
-        val logFile = logsFile ?: throw RuntimeException("File is not assigned")
-
-        scope?.launch {
-            createFileIfNeeded(file = logFile)
+    private fun logToFile(level: Level, tag: String, message: String) {
+        scope.launch {
+            createFileIfNeeded(file = file)
 
             try {
                 val date = formatDate(
                     timestamp = System.currentTimeMillis(),
                     pattern = LOG_DATE_PATTERN
                 )
-                val fullMessage = "$date $level $message"
-                val bufferWriter = BufferedWriter(FileWriter(logFile, true))
+                val fullMessage = "$date $level $tag $message"
+                val bufferWriter = BufferedWriter(FileWriter(file, true))
 
-                mutex?.withLock {
+                mutex.withLock {
                     bufferWriter.use { buf ->
                         buf.append(fullMessage)
                         buf.newLine()
@@ -70,10 +66,6 @@ object FileLogger {
                 e.printStackTrace()
             }
         }
-    }
-
-    private fun createCoroutineScope(): CoroutineScope {
-        return CoroutineScope(Dispatchers.IO + SupervisorJob())
     }
 
     private fun buildFileName(filePath: String, fileName: String): String {
