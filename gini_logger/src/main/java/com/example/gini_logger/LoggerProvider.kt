@@ -1,6 +1,6 @@
 package com.example.gini_logger
 
-fun interface LoggerProvider<T: WritingMode> {
+fun interface LoggerProvider<T : WritingMode> {
 
     fun provide(mode: T): Logger
 
@@ -8,9 +8,17 @@ fun interface LoggerProvider<T: WritingMode> {
 
         override fun provide(mode: WritingMode.Default): Logger = when (mode) {
             is WritingMode.Default.File -> {
-                FileLogger.getInstance(filePath = mode.filePath, fileName = mode.fileName)
+                FileLogger(filePath = mode.filePath, fileName = mode.fileName)
             }
-            WritingMode.Default.Console -> ConsoleLogger()
+
+            WritingMode.Default.Console -> ConsoleLogger
+
+            is WritingMode.Default.ConsoleAndFile -> {
+                ConsoleAndFileLogger(
+                    fileLogger = FileLogger(filePath = mode.filePath, fileName = mode.fileName),
+                    consoleLogger = ConsoleLogger,
+                )
+            }
         }
     }
 }

@@ -1,33 +1,41 @@
 package com.example.gini_logger
 
-internal class LogManager<T : WritingMode>(
-    private val initializer: Initializer<T>
+internal class LogManager<out W : WritingMode, out B : LogBuilder>(
+    val minLevel: Level,
+    writingMode: W,
+    loggerProvider: LoggerProvider<W>,
+    private val formatter: Formatter,
+    private val tagger: Tagger,
+    private val logBuilderProvider: LogBuilderProvider<B>,
 ) {
 
-    private val writingMode: T get() = initializer.writingMode
-    private val loggerProvider: LoggerProvider<T> get() = initializer.loggerProvider
-    private val formatter: Formatter get() = initializer.formatter
-    private val tagger: Tagger get() = initializer.tagger
-    private val logBuilder: LogBuilder get() = initializer.logBuilder
-
-    private val logger: Logger get() = loggerProvider.provide(mode = writingMode)
+    private val logger: Logger = loggerProvider.provide(mode = writingMode)
 
     fun log(level: Level, message: String) {
-        logger.log(
-            level = level,
-            tag = tagger.tag(),
-            message = formatter.format(message)
-        )
+        level.performByMinLevel {
+            logger.log(
+                level = level,
+                tag = tagger.tag(),
+                message = formatter.format(message)
+            )
+        }
     }
 
     fun log(level: Level, block: LogBuilder.() -> Unit) {
+        level.performByMinLevel {
+            val logBuilder = logBuilderProvider.provide()
 
-        block(logBuilder)
+            block(logBuilder)
 
-        logger.log(
-            level = level,
-            tag = tagger.tag(),
-            message = formatter.format(logBuilder.build())
-        )
+            logger.log(
+                level = level,
+                tag = tagger.tag(),
+                message = formatter.format(logBuilder.build())
+            )
+        }
+    }
+
+    private inline fun Level.performByMinLevel(block: () -> Unit) {
+        if (ordinal >= minLevel.ordinal) block()
     }
 }

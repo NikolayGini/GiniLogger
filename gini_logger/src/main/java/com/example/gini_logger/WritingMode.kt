@@ -10,5 +10,10 @@ interface WritingMode {
         ) : Default
 
         data object Console : Default
+
+        data class ConsoleAndFile(
+            val filePath: String,
+            val fileName: String = FileLogger.DEFAULT_FILE_NAME
+        ) : Default
     }
 }

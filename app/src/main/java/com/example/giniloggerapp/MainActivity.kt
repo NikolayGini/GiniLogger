@@ -1,20 +1,17 @@
 package com.example.giniloggerapp
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.gini_logger.Formatter
 import com.example.gini_logger.GiniLogger
 import com.example.gini_logger.Level
 import com.example.gini_logger.LogBuilder
+import com.example.gini_logger.LogBuilderProvider
 import com.example.gini_logger.Logger
-import com.example.gini_logger.LoggerProvider
-import com.example.gini_logger.Tagger
 import com.example.gini_logger.WritingMode
 import com.example.gini_logger.logD
 import com.example.gini_logger.logE
@@ -40,38 +37,54 @@ class MainActivity : ComponentActivity() {
 
         Timber.plant(Timber.DebugTree())
 
-        GiniLogger.initializeDefault {
+        GiniLogger.initializeDefault(
             /** uncomment this to check logging to file */
 //            writingMode = WritingMode.Default.File(filePath = filesDir.path)
-        }
+            /** uncomment this to check logging to file and console */
+//            writingMode = WritingMode.Default.ConsoleAndFile(filePath = filesDir.path)
+        )
 
         /** customising default implementation */
-//        GiniLogger.initializeDefault {
-//            writingMode = WritingMode.Default.Console
-//            formatter = Formatter { message -> "returns formatted message: $message" }
-//            tagger = Tagger { "custom tag logic" }
-//            loggerProvider = LoggerProvider { mode: WritingMode.Default ->
+//        GiniLogger.initializeDefault(
+//            minLevel = Level.Debug,
+//            writingMode = WritingMode.Default.Console,
+//            formatter = { message -> "return formatted message: $message" },
+//            tagger = { "custom tag logic" },
+//            loggerProvider = { mode: WritingMode.Default ->
 //                when (mode) {
 //                    is WritingMode.Default.File -> {
 //                        Logger { level: Level, tag: String, message: String -> /** your logic */ }
 //                    }
+//
 //                    WritingMode.Default.Console -> {
 //                        Logger { level: Level, tag: String, message: String -> /** your logic */ }
 //                    }
+//
+//                    is WritingMode.Default.ConsoleAndFile -> {
+//                        Logger { level: Level, tag: String, message: String -> /** your logic */ }
+//                    }
+//                }
+//            },
+//            logBuilderProvider = {
+//                /** provide your custom LogBuilder */
+//                object : LogBuilder {
+//
+//                    override fun build(): String {
+//                        return "build your string"
+//                    }
+//
+//                    override fun message(value: Any) {
+//                        /** use this block to build multiple log */
+//                    }
 //                }
 //            }
-//            logBuilder = object : LogBuilder {
-//
-//                override fun build(): String { return "build your string" }
-//
-//                override fun message(value: Any) { /** use this block to build multiple log */ }
-//            }
-//        }
+//        )
 
         /** custom implementation */
 //        GiniLogger.initialize(
+//            minLevel = Level.Debug,
 //            writingMode = CustomWritingMode.Remote,
-//            formatter = { message -> "returns formatted message: $message" },
+//            formatter = { message -> "return formatted message: $message" },
 //            tagger = { "custom tag logic" },
 //            loggerProvider = { mode: CustomWritingMode ->
 //                when (mode) {
@@ -84,11 +97,19 @@ class MainActivity : ComponentActivity() {
 //                    }
 //                }
 //            },
-//            logBuilder = object : LogBuilder {
+//            logBuilderProvider = {
 //
-//                override fun build(): String { return "build your string"}
+//                /** provide your custom LogBuilder */
+//                object : LogBuilder {
 //
-//                override fun message(value: Any) { /** use this block to build multiple log */ }
+//                    override fun build(): String {
+//                        return "build your string"
+//                    }
+//
+//                    override fun message(value: Any) {
+//                        /** use this block to build multiple log */
+//                    }
+//                }
 //            }
 //        )
 
@@ -99,13 +120,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(
-                        data = data,
-                        onDebugClick = { logD(message = it) },
-                        onInfoClick = { logI(message = it) },
-                        onErrorClick = { logE(message = it) },
-                        onMultipleLogClick = { invokeMultipleLog() },
-                    )
+//                    MainScreen(
+//                        data = data,
+//                        onDebugClick = { logD(message = it) },
+//                        onInfoClick = { logI(message = it) },
+//                        onErrorClick = { logE(message = it) },
+//                        onMultipleLogClick = { invokeMultipleLog() },
+//                    )
                 }
             }
         }

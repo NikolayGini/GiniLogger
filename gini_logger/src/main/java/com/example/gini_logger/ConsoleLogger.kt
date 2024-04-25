@@ -2,7 +2,7 @@ package com.example.gini_logger
 
 import android.util.Log
 
-internal class ConsoleLogger : Logger {
+internal object ConsoleLogger : Logger {
 
     override fun log(
         level: Level,

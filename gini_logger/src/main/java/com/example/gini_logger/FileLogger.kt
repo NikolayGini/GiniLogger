@@ -14,21 +14,13 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-internal class FileLogger private constructor(filePath: String, fileName: String) : Logger {
+internal class FileLogger(filePath: String, fileName: String) : Logger {
 
     companion object {
 
         private const val FILE_NAME_DATE_PATTERN = "dd.MM.yyyy_HH:mm:ss"
         private const val LOG_DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS"
         internal const val DEFAULT_FILE_NAME = "gini_logger"
-
-        private var instance: FileLogger? = null
-        private val LOCK = Any()
-
-        internal fun getInstance(filePath: String, fileName: String): FileLogger = synchronized(LOCK) {
-            instance ?: FileLogger(filePath = filePath, fileName = fileName)
-                .also { instance = it }
-        }
     }
 
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())

@@ -2,43 +2,53 @@ package com.example.gini_logger
 
 object GiniLogger {
 
-    private var logManager: LogManager<out WritingMode>? = null
+    private var logManager: LogManager<WritingMode, LogBuilder>? = null
 
-    private val nonNullableLogManager: LogManager<out WritingMode> get() {
-        return logManager ?: throw RuntimeException(
+    private val nonNullableLogManager: LogManager<WritingMode, LogBuilder>
+        get() = logManager ?: throw RuntimeException(
             "GiniLogger has not been initialized. Must call initialize() or initializeDefault() functions"
         )
-    }
 
-    fun <T : WritingMode> initialize(
-        writingMode: T,
-        loggerProvider: LoggerProvider<T>,
+    internal val minLevel: Level get() = nonNullableLogManager.minLevel
+
+    fun <W : WritingMode, B : LogBuilder> initialize(
+        minLevel: Level,
+        writingMode: W,
+        loggerProvider: LoggerProvider<W>,
         formatter: Formatter,
         tagger: Tagger,
-        logBuilder: LogBuilder,
+        logBuilderProvider: LogBuilderProvider<B>,
     ) {
-        val initializer = Initializer(
+        val initializedLogManager = LogManager(
+            minLevel = minLevel,
             writingMode = writingMode,
             loggerProvider = loggerProvider,
             formatter = formatter,
             tagger = tagger,
-            logBuilder = logBuilder,
+            logBuilderProvider = logBuilderProvider,
         )
 
-        logManager = LogManager(initializer = initializer)
+        logManager = initializedLogManager
     }
 
-    fun initializeDefault(block: Initializer<WritingMode.Default>.() -> Unit = {}) {
-        val initializer = Initializer(
-            writingMode = WritingMode.Default.Console,
-            loggerProvider = LoggerProvider.Default,
-            formatter = Formatter.Default,
-            tagger = Tagger.Default,
-            logBuilder = LogBuilder.Default()
+    fun initializeDefault(
+        minLevel: Level = Level.Verbose,
+        writingMode: WritingMode.Default = WritingMode.Default.Console,
+        loggerProvider: LoggerProvider<WritingMode.Default> = LoggerProvider.Default,
+        formatter: Formatter = Formatter.Default,
+        tagger: Tagger = Tagger.Default,
+        logBuilderProvider: LogBuilderProvider<LogBuilder> = LogBuilderProvider.Default()
+    ) {
+        val initializedLogManager = LogManager(
+            minLevel = minLevel,
+            writingMode = writingMode,
+            loggerProvider = loggerProvider,
+            formatter = formatter,
+            tagger = tagger,
+            logBuilderProvider = logBuilderProvider,
         )
 
-        block(initializer)
-        logManager = LogManager(initializer = initializer)
+        logManager = initializedLogManager
     }
 
     internal fun log(level: Level, message: String) {
