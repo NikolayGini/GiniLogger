@@ -1,4 +1,16 @@
-package com.example.gini_logger
+package com.example.gini_logger.data.core
+
+import com.example.gini_logger.data.default_implementation.DefaultFormatter
+import com.example.gini_logger.data.default_implementation.DefaultLogBuilderProvider
+import com.example.gini_logger.data.default_implementation.DefaultLoggerProvider
+import com.example.gini_logger.data.default_implementation.DefaultTag
+import com.example.gini_logger.data.default_implementation.DefaultWritingMode
+import com.example.gini_logger.domain.Formatter
+import com.example.gini_logger.domain.LogBuilder
+import com.example.gini_logger.domain.LogBuilderProvider
+import com.example.gini_logger.domain.LoggerProvider
+import com.example.gini_logger.domain.WritingMode
+import com.example.gini_logger.domain.model.Level
 
 object GiniLogger {
 
@@ -16,7 +28,7 @@ object GiniLogger {
         writingMode: W,
         loggerProvider: LoggerProvider<W>,
         formatter: Formatter,
-        tagger: Tagger,
+        tag: String,
         logBuilderProvider: LogBuilderProvider<B>,
     ) {
         val initializedLogManager = LogManager(
@@ -24,7 +36,7 @@ object GiniLogger {
             writingMode = writingMode,
             loggerProvider = loggerProvider,
             formatter = formatter,
-            tagger = tagger,
+            tag = tag,
             logBuilderProvider = logBuilderProvider,
         )
 
@@ -33,18 +45,18 @@ object GiniLogger {
 
     fun initializeDefault(
         minLevel: Level = Level.Verbose,
-        writingMode: WritingMode.Default = WritingMode.Default.Console,
-        loggerProvider: LoggerProvider<WritingMode.Default> = LoggerProvider.Default,
-        formatter: Formatter = Formatter.Default,
-        tagger: Tagger = Tagger.Default,
-        logBuilderProvider: LogBuilderProvider<LogBuilder> = LogBuilderProvider.Default()
+        writingMode: DefaultWritingMode = DefaultWritingMode.Console,
+        loggerProvider: LoggerProvider<DefaultWritingMode> = DefaultLoggerProvider,
+        formatter: Formatter = DefaultFormatter,
+        tag: String = DefaultTag.value,
+        logBuilderProvider: LogBuilderProvider<LogBuilder> = DefaultLogBuilderProvider()
     ) {
         val initializedLogManager = LogManager(
             minLevel = minLevel,
             writingMode = writingMode,
             loggerProvider = loggerProvider,
             formatter = formatter,
-            tagger = tagger,
+            tag = tag,
             logBuilderProvider = logBuilderProvider,
         )
 

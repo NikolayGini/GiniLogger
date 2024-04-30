@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.gini_logger.custom.plugin")
+    id("org.jetbrains.dokka") version "1.9.20"
 }
 
 android {

@@ -1,11 +1,19 @@
-package com.example.gini_logger
+package com.example.gini_logger.data.core
+
+import com.example.gini_logger.domain.Formatter
+import com.example.gini_logger.domain.LogBuilder
+import com.example.gini_logger.domain.LogBuilderProvider
+import com.example.gini_logger.domain.Logger
+import com.example.gini_logger.domain.LoggerProvider
+import com.example.gini_logger.domain.WritingMode
+import com.example.gini_logger.domain.model.Level
 
 internal class LogManager<out W : WritingMode, out B : LogBuilder>(
     val minLevel: Level,
     writingMode: W,
     loggerProvider: LoggerProvider<W>,
     private val formatter: Formatter,
-    private val tagger: Tagger,
+    private val tag: String,
     private val logBuilderProvider: LogBuilderProvider<B>,
 ) {
 
@@ -15,7 +23,7 @@ internal class LogManager<out W : WritingMode, out B : LogBuilder>(
         level.performByMinLevel {
             logger.log(
                 level = level,
-                tag = tagger.tag(),
+                tag = tag,
                 message = formatter.format(message)
             )
         }
@@ -29,7 +37,7 @@ internal class LogManager<out W : WritingMode, out B : LogBuilder>(
 
             logger.log(
                 level = level,
-                tag = tagger.tag(),
+                tag = tag,
                 message = formatter.format(logBuilder.build())
             )
         }

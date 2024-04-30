@@ -1,5 +1,7 @@
-package com.example.gini_logger
+package com.example.gini_logger.data.default_implementation.logger
 
+import com.example.gini_logger.domain.Logger
+import com.example.gini_logger.domain.model.Level
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

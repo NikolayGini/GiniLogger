@@ -1,5 +1,14 @@
-package com.example.gini_logger
+package com.example.gini_logger.data.core
 
+import com.example.gini_logger.domain.LogBuilder
+import com.example.gini_logger.domain.model.Level
+
+/**
+ * Logs the provided message at the specified level
+ *
+ * @param message string to log
+ * @param level to log
+ * */
 
 fun log(message: String, level: Level = GiniLogger.minLevel) {
     GiniLogger.log(level = level, message = message)
