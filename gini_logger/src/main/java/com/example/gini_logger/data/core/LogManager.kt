@@ -4,20 +4,15 @@ import com.example.gini_logger.domain.Formatter
 import com.example.gini_logger.domain.LogBuilder
 import com.example.gini_logger.domain.LogBuilderProvider
 import com.example.gini_logger.domain.Logger
-import com.example.gini_logger.domain.LoggerProvider
-import com.example.gini_logger.domain.WritingMode
 import com.example.gini_logger.domain.model.Level
 
-internal class LogManager<out W : WritingMode, out B : LogBuilder>(
+internal class LogManager<out B : LogBuilder>(
     val minLevel: Level,
-    writingMode: W,
-    loggerProvider: LoggerProvider<W>,
+    val logger: Logger,
     private val formatter: Formatter,
     private val tag: String,
     private val logBuilderProvider: LogBuilderProvider<B>,
 ) {
-
-    private val logger: Logger = loggerProvider.provide(mode = writingMode)
 
     fun log(level: Level, message: String) {
         level.performByMinLevel {

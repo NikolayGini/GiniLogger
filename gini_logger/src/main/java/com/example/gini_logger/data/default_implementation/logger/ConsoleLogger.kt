@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.gini_logger.domain.Logger
 import com.example.gini_logger.domain.model.Level
 
-internal object ConsoleLogger : Logger {
+object ConsoleLogger : Logger {
 
     override fun log(
         level: Level,

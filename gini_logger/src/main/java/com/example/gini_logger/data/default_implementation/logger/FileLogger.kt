@@ -16,13 +16,13 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-internal class FileLogger(filePath: String, fileName: String) : Logger {
+class FileLogger(filePath: String, fileName: String = DEFAULT_FILE_NAME) : Logger {
 
     companion object {
 
         private const val FILE_NAME_DATE_PATTERN = "dd.MM.yyyy_HH:mm:ss"
         private const val LOG_DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS"
-        internal const val DEFAULT_FILE_NAME = "gini_logger"
+        private const val DEFAULT_FILE_NAME = "gini_logger"
     }
 
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
