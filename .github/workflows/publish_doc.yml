@@ -27,6 +27,8 @@ jobs:
 
       - name: Publish Docs
         run: |
+          git config --global user.email "nikolayk@gini-apps.com"
+          git config --global user.name "NikolayGini"
           git checkout --orphan gh-pages
           git rm -rf .
           cp -r ${{ github.workspace }}/gini_logger/build/dokka/html/* .
