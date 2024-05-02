@@ -25,6 +25,10 @@ jobs:
 #      - name: Publish to Maven Local
 #        run: ./gradlew publishToMavenLocal
 
+      - name: Create documentation file
+        run: |
+          ./gradlew dokkaHtml
+
       - name: Build and Publish Docs
         run: |
           ./gradlew dokkaHtml
