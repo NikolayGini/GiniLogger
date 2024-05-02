@@ -3,7 +3,12 @@ name: Publish Documentation
 on:
   push:
     branches:
-      - ci_cd, main
+      - ci_cd
+      - main
+
+  pull_request:
+    branches:
+      - main
 
 jobs:
   deploy:
