@@ -19,18 +19,18 @@ jobs:
       - name: Create documentation file
         run: ./gradlew dokkaHtml
 
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x ./gradlew
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
 #
 #      - name: Publish to Maven Local
 #        run: ./gradlew publishToMavenLocal
 
-#      - name: Build and Publish Docs
-#        run: |
-#          ./gradlew dokkaHtml
-#          git checkout --orphan gh-pages
-#          git rm -rf .
-#          cp -r ${{ github.workspace }}/build/dokkaHtml/* .
-#          git add .
-#          git commit -m "Publish documentation"
-#          git push origin gh-pages --force
+      - name: Build and Publish Docs
+        run: |
+          ./gradlew dokkaHtml
+          git checkout --orphan gh-pages
+          git rm -rf .
+          cp -r ${{ github.workspace }}/build/dokkaHtml/* .
+          git add .
+          git commit -m "Publish documentation"
+          git push origin gh-pages --force
