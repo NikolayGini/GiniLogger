@@ -28,11 +28,11 @@ jobs:
       - name: Create documentation file
         run: ./gradlew dokkaHtml
 
-      - name: Build and Publish Docs
+      - name: Publish Docs
         run: |
           git checkout --orphan gh-pages
           git rm -rf .
-          cp -r ${{ github.workspace }}/build/dokkaHtml/* .
+          cp -r ${{ github.workspace }}/build/dokka/html/* .
           git add .
           git commit -m "Publish documentation"
           git push origin gh-pages --force
