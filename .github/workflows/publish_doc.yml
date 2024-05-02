@@ -15,6 +15,13 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+
+#      - name: Grant execute permission for gradlew
+#        run: chmod +x ./gradlew
+#
+#      - name: Publish to Maven Local
+#        run: ./gradlew publishToMavenLocal
+
 #      - name: Build and Publish Docs
 #        run: |
 #          ./gradlew dokkaHtml
