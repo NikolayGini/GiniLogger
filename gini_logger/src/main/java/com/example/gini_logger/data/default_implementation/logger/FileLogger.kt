@@ -16,6 +16,15 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * A file-based logger that writes log messages to a specified file in an asynchronous manner.
+ * This logger appends each log entry to the end of the file, formatting each entry with a timestamp,
+ * log level, and tag.
+ *
+ * @param filePath The directory path where the log file will be created or exists.
+ * @param fileName The name of the file to write logs to. Defaults to [DEFAULT_FILE_NAME].
+ */
+
 class FileLogger(filePath: String, fileName: String = DEFAULT_FILE_NAME) : Logger {
 
     companion object {
@@ -29,6 +38,15 @@ class FileLogger(filePath: String, fileName: String = DEFAULT_FILE_NAME) : Logge
     private val mutex: Mutex = Mutex()
     private val file = File(buildFileName(filePath = filePath, fileName = fileName))
 
+    /**
+     * Logs a message with the specified level, tag, and content by writing it to a log file.
+     * The operation is performed asynchronously to avoid blocking the caller's thread.
+     *
+     * @param level The severity level of the log message.
+     * @param tag The tag associated with the log message.
+     * @param message The message content to log.
+     */
+
     override fun log(
         level: Level,
         tag: String,
@@ -36,6 +54,15 @@ class FileLogger(filePath: String, fileName: String = DEFAULT_FILE_NAME) : Logge
     ) {
         logToFile(level = level, tag = tag, message = message)
     }
+
+    /**
+     * Logs a message to a file asynchronously, ensuring that the logging process does not block the main thread.
+     * This method formats the message, attaches a timestamp and the log level, and writes to the log file, ensuring thread safety with a mutex.
+     *
+     * @param level The severity level of the log.
+     * @param tag A string label used to identify the source of the log.
+     * @param message The actual log message to be written to the file.
+     */
 
     private fun logToFile(level: Level, tag: String, message: String) {
         scope.launch {
@@ -62,15 +89,40 @@ class FileLogger(filePath: String, fileName: String = DEFAULT_FILE_NAME) : Logge
         }
     }
 
+    /**
+     * Constructs a file name based on the provided path and the current date and time.
+     * This method ensures that each log file is uniquely identified by its timestamp.
+     *
+     * @param filePath The path where the log file will be stored.
+     * @param fileName The base name for the log file, which will be appended with a timestamp.
+     * @return The fully constructed file name.
+     */
+
     private fun buildFileName(filePath: String, fileName: String): String {
         val date = formatDate(timestamp = System.currentTimeMillis())
         return "$filePath/${fileName}_$date.txt"
     }
 
+    /**
+     * Formats a timestamp into a string based on the specified pattern.
+     * The default pattern formats the date suitable for use in file names.
+     *
+     * @param timestamp The milliseconds since Unix epoch to be formatted.
+     * @param pattern The pattern used to format the timestamp.
+     * @return A string representing the formatted date.
+     */
+
     private fun formatDate(timestamp: Long, pattern: String = FILE_NAME_DATE_PATTERN): String {
         val formatter = SimpleDateFormat(pattern, Locale.getDefault())
         return formatter.format(Date(timestamp))
     }
+
+    /**
+     * Ensures that the log file exists before writing to it.
+     * If the file does not exist, it attempts to create a new file.
+     *
+     * @param file The file to check and create if it does not exist.
+     */
 
     private fun createFileIfNeeded(file: File) {
         if (file.exists()) return

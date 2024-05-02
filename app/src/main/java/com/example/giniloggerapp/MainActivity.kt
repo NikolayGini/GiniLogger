@@ -48,25 +48,25 @@ class MainActivity : ComponentActivity() {
         )
 
         /** custom implementation */
-        GiniLogger.initialize(
-            minLevel = Level.Debug,
-            logger = { level: Level, tag: String, message: String -> /** your logic */ },
-            formatter = { message -> "return formatted message: $message" },
-            tag = "custom tag",
-            logBuilderProvider = {
-                /** provide your custom LogBuilder */
-                object : LogBuilder {
-
-                    override fun build(): String {
-                        return "build your string"
-                    }
-
-                    override fun message(value: Any) {
-                        /** use this block to build multiple log */
-                    }
-                }
-            }
-        )
+//        GiniLogger.initialize(
+//            minLevel = Level.Debug,
+//            logger = { level: Level, tag: String, message: String -> /** your logic */ },
+//            formatter = { message -> "return formatted message: $message" },
+//            tag = "custom tag",
+//            logBuilderProvider = {
+//                /** provide your custom LogBuilder */
+//                object : LogBuilder {
+//
+//                    override fun build(): String {
+//                        return "build your string"
+//                    }
+//
+//                    override fun message(value: Any) {
+//                        /** use this block to build multiple log */
+//                    }
+//                }
+//            }
+//        )
 
         setContent {
             GiniLoggerAppTheme {
