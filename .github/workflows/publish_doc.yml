@@ -32,7 +32,6 @@ jobs:
         run: |
           git checkout --orphan gh-pages
           git rm -rf .
-#          cp -r ${{ github.workspace }}/build/dokka/html/* .
           cp -r ${{ github.workspace }}/gini_logger/build/dokka/html/* .
           git add .
           git commit -m "Publish documentation"
