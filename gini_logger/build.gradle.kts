@@ -46,9 +46,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
-tasks.dokkaHtml.configure {
-    outputDirectory.set(file("docs"))
-
-}
+//tasks.dokkaHtml.configure {
+//    outputDirectory.set(file("docs"))
+//
+//}
 
 tasks.publishToMavenLocal.dependsOn("dokkaHtml")
