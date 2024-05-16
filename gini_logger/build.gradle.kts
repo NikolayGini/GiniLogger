@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import org.jetbrains.dokka.DokkaConfiguration
 
 plugins {
     alias(libs.plugins.androidLibrary)
@@ -48,9 +49,22 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
 }
 
-//tasks.dokkaHtml.configure {
+tasks.dokkaHtml.configure {
 //    outputDirectory.set(file("docs"))
-//
-//}
+
+    dokkaSourceSets {
+        configureEach {
+            documentedVisibilities.set(
+                setOf(
+                    DokkaConfiguration.Visibility.PUBLIC,
+                    DokkaConfiguration.Visibility.PROTECTED,
+                    DokkaConfiguration.Visibility.INTERNAL,
+                    DokkaConfiguration.Visibility.PACKAGE,
+                    DokkaConfiguration.Visibility.PRIVATE
+                )
+            )
+        }
+    }
+}
 
 tasks.publishToMavenLocal.dependsOn("dokkaHtml")

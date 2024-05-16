@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+private const val LOG_DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS"
+
 /**
  * Formats a given timestamp into a string based on the specified date pattern.
  *
@@ -13,8 +15,6 @@ import java.util.Locale
  *
  * @throws IllegalArgumentException If the given pattern is invalid.
  */
-
-private const val LOG_DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS"
 
 internal fun formatDate(timestamp: Long, pattern: String = LOG_DATE_PATTERN): String {
     val formatter = SimpleDateFormat(pattern, Locale.getDefault())
