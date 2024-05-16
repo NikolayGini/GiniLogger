@@ -17,7 +17,7 @@ class MavenLocalPublishingPlugin : Plugin<Project> {
 
                         groupId = "com.gini_logger"
                         artifactId = "core"
-                        version = "1.0.6"
+                        version = "1.0.7"
                     }
 
                     repositories {

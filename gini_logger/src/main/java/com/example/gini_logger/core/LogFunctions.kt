@@ -1,4 +1,4 @@
-package com.example.gini_logger.data.core
+package com.example.gini_logger.core
 
 import com.example.gini_logger.domain.LogBuilder
 import com.example.gini_logger.domain.model.Level

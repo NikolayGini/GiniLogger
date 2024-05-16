@@ -1,5 +1,7 @@
 package com.example.gini_logger.data.default_implementation.logger
 
+import com.example.gini_logger.data.default_implementation.formatDate
+import com.example.gini_logger.data.default_implementation.logger.FileLogger.Companion.DEFAULT_FILE_NAME
 import com.example.gini_logger.domain.Logger
 import com.example.gini_logger.domain.model.Level
 import kotlinx.coroutines.CoroutineScope
@@ -12,9 +14,6 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 /**
  * A file-based logger that writes log messages to a specified file in an asynchronous manner.
@@ -30,7 +29,6 @@ class FileLogger(filePath: String, fileName: String = DEFAULT_FILE_NAME) : Logge
     companion object {
 
         private const val FILE_NAME_DATE_PATTERN = "dd.MM.yyyy_HH:mm:ss"
-        private const val LOG_DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS"
         private const val DEFAULT_FILE_NAME = "gini_logger"
     }
 
@@ -69,10 +67,7 @@ class FileLogger(filePath: String, fileName: String = DEFAULT_FILE_NAME) : Logge
             createFileIfNeeded(file = file)
 
             try {
-                val date = formatDate(
-                    timestamp = System.currentTimeMillis(),
-                    pattern = LOG_DATE_PATTERN
-                )
+                val date = formatDate(timestamp = System.currentTimeMillis())
                 val fullMessage = "$date $level $tag $message"
                 val bufferWriter = BufferedWriter(FileWriter(file, true))
 
@@ -99,22 +94,12 @@ class FileLogger(filePath: String, fileName: String = DEFAULT_FILE_NAME) : Logge
      */
 
     private fun buildFileName(filePath: String, fileName: String): String {
-        val date = formatDate(timestamp = System.currentTimeMillis())
+        val date = formatDate(
+            timestamp = System.currentTimeMillis(),
+            pattern = FILE_NAME_DATE_PATTERN
+        )
+
         return "$filePath/${fileName}_$date.txt"
-    }
-
-    /**
-     * Formats a timestamp into a string based on the specified pattern.
-     * The default pattern formats the date suitable for use in file names.
-     *
-     * @param timestamp The milliseconds since Unix epoch to be formatted.
-     * @param pattern The pattern used to format the timestamp.
-     * @return A string representing the formatted date.
-     */
-
-    private fun formatDate(timestamp: Long, pattern: String = FILE_NAME_DATE_PATTERN): String {
-        val formatter = SimpleDateFormat(pattern, Locale.getDefault())
-        return formatter.format(Date(timestamp))
     }
 
     /**
